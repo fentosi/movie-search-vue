@@ -1,8 +1,13 @@
 <template>
   <div>
-    <MovieItem v-for="movie in movies" v-bind:movie="movie" v-bind:key="movie.imdbID"/>
+      <div class="row">
+        <div class="col-md-3 col-sm-1" v-for="movie in movies" v-bind:key="movie.imdbID">
+          <MovieItem v-bind:movie="movie" />
+        </div>
+      </div>
   </div>
 </template>
+
 
 <script>
 // @ is an alias to /src
