@@ -6,9 +6,9 @@ const chai = require('chai')
 const expect = chai.expect
 
 describe('SearchForm.vue', () => {
-  it('has a button', () => {
+  it('has a submit button', () => {
     const wrapper = mount(SearchForm)
-    expect(wrapper.contains('button')).to.equal(true)
+    expect(wrapper.contains('input[type=submit]')).to.equal(true)
   })
 
   it('has an input', () => {
@@ -28,13 +28,13 @@ describe('SearchForm.vue', () => {
     expect(wrapper.vm.searchTerm).to.be.equal(value)
   })
 
-  it('submitting form with value calls search', () => {
+  it('submitting form calls search', () => {
     const searchStub = sinon.stub()
     const wrapper = mount(SearchForm)
-    const button = wrapper.find('button')
+    const form = wrapper.find('form')
 
     wrapper.setMethods({ search: searchStub })
-    button.trigger('click')
+    form.trigger('submit')
 
     expect(searchStub.called).to.be.equal(true)
   })
