@@ -1,11 +1,22 @@
 import { mount } from '@vue/test-utils'
 import SearchForm from '@/components/SearchForm.vue'
 import sinon from 'sinon'
+import movieRepository from '../../src/repositories/movieRepository'
 
 const chai = require('chai')
 const expect = chai.expect
 
 describe('SearchForm.vue', () => {
+  let movieRepositorySearchStub
+
+  beforeEach(() => {
+    movieRepositorySearchStub = sinon.spy(movieRepository, 'search')
+  })
+
+  afterEach(() => {
+    movieRepository.search.restore()
+  })
+
   it('has a submit button', () => {
     const wrapper = mount(SearchForm)
     expect(wrapper.contains('input[type=submit]')).to.equal(true)
@@ -37,5 +48,27 @@ describe('SearchForm.vue', () => {
     form.trigger('submit')
 
     expect(searchStub.called).to.be.equal(true)
+  })
+
+  it('submitting form calls movieRepository search', () => {
+    const wrapper = mount(SearchForm)
+    const form = wrapper.find('form')
+
+    form.trigger('submit')
+
+    expect(movieRepositorySearchStub.called).to.be.equal(true)
+  })
+
+  it('submitting form calls movieRepository search with given searchTerm', () => {
+    const wrapper = mount(SearchForm)
+    const form = wrapper.find('form')
+    const searchTerm = 'marvel'
+
+    wrapper.vm.searchTerm = searchTerm
+
+    form.trigger('submit')
+
+    expect(movieRepositorySearchStub.called).to.be.equal(true)
+    expect(movieRepositorySearchStub.calledWith(searchTerm)).to.be.equal(true)
   })
 })
