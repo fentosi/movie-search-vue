@@ -7,6 +7,7 @@
 
 <script>
 import MovieRepository from '@/repositories/movieRepository.js'
+import _ from 'lodash'
 
 export default {
   name: 'SearchForm',
@@ -17,7 +18,9 @@ export default {
   },
   methods: {
     search: function () {
-      MovieRepository.search(this.searchTerm)
+      if (!_.isEmpty(this.searchTerm)) {
+        MovieRepository.search(this.searchTerm)
+      }
     }
   }
 }

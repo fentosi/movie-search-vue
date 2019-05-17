@@ -39,7 +39,7 @@ describe('SearchForm.vue', () => {
     expect(wrapper.vm.searchTerm).to.be.equal(value)
   })
 
-  it('submitting form calls search', () => {
+  it('submitting form calls search method', () => {
     const searchStub = sinon.stub()
     const wrapper = mount(SearchForm)
     const form = wrapper.find('form')
@@ -50,9 +50,21 @@ describe('SearchForm.vue', () => {
     expect(searchStub.called).to.be.equal(true)
   })
 
-  it('submitting form calls movieRepository search', () => {
+  it('submitting form without a value does not call movieRepository search', () => {
     const wrapper = mount(SearchForm)
     const form = wrapper.find('form')
+
+    form.trigger('submit')
+
+    expect(movieRepositorySearchStub.called).to.be.equal(false)
+  })
+
+  it('submitting form with value calls movieRepository search', () => {
+    const wrapper = mount(SearchForm)
+    const form = wrapper.find('form')
+    const searchTerm = 'marvel'
+
+    wrapper.vm.searchTerm = searchTerm
 
     form.trigger('submit')
 
