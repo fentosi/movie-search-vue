@@ -1,16 +1,20 @@
-import { mount } from '@vue/test-utils'
+import { mount, shallowMount, createLocalVue } from '@vue/test-utils'
 import SearchForm from '@/components/SearchForm.vue'
 import sinon from 'sinon'
 import movieRepository from '../../src/repositories/movieRepository'
+import Vuex from 'vuex'
 
 const chai = require('chai')
 const expect = chai.expect
+
+const localVue = createLocalVue()
+localVue.use(Vuex)
 
 describe('SearchForm.vue', () => {
   let movieRepositorySearchStub
 
   beforeEach(() => {
-    movieRepositorySearchStub = sinon.spy(movieRepository, 'search')
+    movieRepositorySearchStub = sinon.stub(movieRepository, 'search').resolves([])
   })
 
   afterEach(() => {
@@ -82,5 +86,26 @@ describe('SearchForm.vue', () => {
 
     expect(movieRepositorySearchStub.called).to.be.equal(true)
     expect(movieRepositorySearchStub.calledWith(searchTerm)).to.be.equal(true)
+  })
+
+  it('submitting form calls "updateMovies" on $store with correct attributes', async () => {
+    const mockStore = { dispatch: sinon.spy() }
+    const wrapper = shallowMount(SearchForm, {
+      mocks: {
+        $store: mockStore
+      }
+    })
+    const form = wrapper.find('form')
+    const searchTerm = 'marvel'
+
+    wrapper.vm.searchTerm = searchTerm
+
+    form.trigger('submit')
+
+    await wrapper.vm.$nextTick()
+
+    expect(mockStore.dispatch.called).to.be.equal(true)
+    expect(mockStore.dispatch.calledWith('updateMovies')).to.be.equal(true)
+    expect(mockStore.dispatch.calledWith('updateMovies', [])).to.be.equal(true)
   })
 })

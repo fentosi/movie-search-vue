@@ -17,9 +17,10 @@ export default {
     }
   },
   methods: {
-    search: function () {
+    async search () {
       if (!_.isEmpty(this.searchTerm)) {
-        MovieRepository.search(this.searchTerm)
+        const data = await MovieRepository.search(this.searchTerm)
+        this.$store.dispatch('updateMovies', data)
       }
     }
   }
