@@ -20,7 +20,7 @@ export default {
     async search () {
       if (!_.isEmpty(this.searchTerm)) {
         const data = await MovieRepository.search(this.searchTerm)
-        this.$store.dispatch('updateMovies', data)
+        this.$store.dispatch('updateMovies', data.data.Search)
       }
     }
   }
