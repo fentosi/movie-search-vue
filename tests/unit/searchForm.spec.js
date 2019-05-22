@@ -1,4 +1,4 @@
-import { mount, shallowMount, createLocalVue } from '@vue/test-utils'
+import { shallowMount, createLocalVue } from '@vue/test-utils'
 import SearchForm from '@/components/SearchForm.vue'
 import sinon from 'sinon'
 import movieRepository from '../../src/repositories/movieRepository'
@@ -6,15 +6,18 @@ import Vuex from 'vuex'
 
 const chai = require('chai')
 const expect = chai.expect
+const searchTerm = 'marvel'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
+
+const mockStore = { dispatch: sinon.spy() }
 
 describe('SearchForm.vue', () => {
   let movieRepositorySearchStub
 
   beforeEach(() => {
-    movieRepositorySearchStub = sinon.stub(movieRepository, 'search').resolves([])
+    movieRepositorySearchStub = sinon.stub(movieRepository, 'search').resolves({ data: { Search: [] } })
   })
 
   afterEach(() => {
@@ -22,17 +25,17 @@ describe('SearchForm.vue', () => {
   })
 
   it('has a submit button', () => {
-    const wrapper = mount(SearchForm)
+    const wrapper = shallowMount(SearchForm)
     expect(wrapper.contains('input[type=submit]')).to.equal(true)
   })
 
   it('has an input', () => {
-    const wrapper = mount(SearchForm)
+    const wrapper = shallowMount(SearchForm)
     expect(wrapper.contains('input[type=text]')).to.equal(true)
   })
 
   it('changing input value changes model value', () => {
-    const wrapper = mount(SearchForm)
+    const wrapper = shallowMount(SearchForm)
     const input = wrapper.find('input[type=text]')
     const value = 'test value'
 
@@ -45,7 +48,7 @@ describe('SearchForm.vue', () => {
 
   it('submitting form calls search method', () => {
     const searchStub = sinon.stub()
-    const wrapper = mount(SearchForm)
+    const wrapper = shallowMount(SearchForm)
     const form = wrapper.find('form')
 
     wrapper.setMethods({ search: searchStub })
@@ -55,7 +58,7 @@ describe('SearchForm.vue', () => {
   })
 
   it('submitting form without a value does not call movieRepository search', () => {
-    const wrapper = mount(SearchForm)
+    const wrapper = shallowMount(SearchForm)
     const form = wrapper.find('form')
 
     form.trigger('submit')
@@ -64,9 +67,12 @@ describe('SearchForm.vue', () => {
   })
 
   it('submitting form with value calls movieRepository search', () => {
-    const wrapper = mount(SearchForm)
+    const wrapper = shallowMount(SearchForm, {
+      mocks: {
+        $store: mockStore
+      }
+    })
     const form = wrapper.find('form')
-    const searchTerm = 'marvel'
 
     wrapper.vm.searchTerm = searchTerm
 
@@ -76,9 +82,12 @@ describe('SearchForm.vue', () => {
   })
 
   it('submitting form calls movieRepository search with given searchTerm', () => {
-    const wrapper = mount(SearchForm)
+    const wrapper = shallowMount(SearchForm, {
+      mocks: {
+        $store: mockStore
+      }
+    })
     const form = wrapper.find('form')
-    const searchTerm = 'marvel'
 
     wrapper.vm.searchTerm = searchTerm
 
@@ -89,14 +98,12 @@ describe('SearchForm.vue', () => {
   })
 
   it('submitting form calls "updateMovies" on $store with correct attributes', async () => {
-    const mockStore = { dispatch: sinon.spy() }
     const wrapper = shallowMount(SearchForm, {
       mocks: {
         $store: mockStore
       }
     })
     const form = wrapper.find('form')
-    const searchTerm = 'marvel'
 
     wrapper.vm.searchTerm = searchTerm
 
