@@ -19,8 +19,12 @@ export default {
   methods: {
     async search () {
       if (!_.isEmpty(this.searchTerm)) {
-        const data = await MovieRepository.search(this.searchTerm)
-        this.$store.dispatch('updateMovies', data.data.Search)
+        try {
+          const data = await MovieRepository.search(this.searchTerm)
+          this.$store.dispatch('updateMovies', data.data.Search)
+        } catch (e) {
+          window.alert('The OMDB movie search service is unavailable')
+        }
       }
     }
   }

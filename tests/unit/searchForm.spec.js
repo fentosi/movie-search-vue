@@ -15,8 +15,11 @@ const mockStore = { dispatch: sinon.spy() }
 
 describe('SearchForm.vue', () => {
   let movieRepositorySearchStub
+  let alertFn = sinon.stub(global, 'alert')
 
   beforeEach(() => {
+    global.window = { alert: alertFn }
+
     movieRepositorySearchStub = sinon.stub(movieRepository, 'search').resolves({ data: { Search: [] } })
   })
 
@@ -114,5 +117,18 @@ describe('SearchForm.vue', () => {
     expect(mockStore.dispatch.called).to.be.equal(true)
     expect(mockStore.dispatch.calledWith('updateMovies')).to.be.equal(true)
     expect(mockStore.dispatch.calledWith('updateMovies', [])).to.be.equal(true)
+  })
+
+  it('submitting form throws alert if the moveRepository service throws error', async () => {
+    movieRepository.search.restore()
+    sinon.stub(movieRepository, 'search').rejects('error')
+    const wrapper = shallowMount(SearchForm)
+    const form = wrapper.find('form')
+    wrapper.vm.searchTerm = searchTerm
+    form.trigger('submit')
+
+    await wrapper.vm.$nextTick()
+
+    expect(alertFn.called).to.be.equal(true)
   })
 })
