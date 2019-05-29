@@ -1,10 +1,10 @@
 import { expect } from 'chai'
 import { createLocalVue, mount } from '@vue/test-utils'
-import MoviesList from '../../../src/components/MoviesList'
+import MoviesList from '../../../src/components/MovieList'
 import { cloneDeep } from 'lodash'
 import Vuex from 'vuex'
 import storeConfig from '../../../src/storeConfig'
-import Movie from '../../../src/components/Movie'
+import Movie from '../../../src/components/MovieListItem'
 
 describe('MoviesList.vue', () => {
   let localVue

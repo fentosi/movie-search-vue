@@ -2,7 +2,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-3 col-sm-1" v-for="movie in movies" v-bind:key="movie.imdbID">
-          <MovieItem v-bind:movie="movie" />
+          <MovieListItem v-bind:movie="movie" />
         </div>
       </div>
     </div>
@@ -10,12 +10,12 @@
 
 <script>
 // @ is an alias to /src
-import MovieItem from '../components/Movie.vue'
+import MovieListItem from './MovieListItem.vue'
 
 export default {
-  name: 'MoviesList',
+  name: 'MovieList',
   components: {
-    MovieItem
+    MovieListItem
   },
   computed: {
     movies () {

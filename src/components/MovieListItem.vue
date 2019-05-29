@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: 'MovieItem',
+  name: 'MovieListItem',
   props: ['movie']
 }
 </script>

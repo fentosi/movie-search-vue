@@ -2,19 +2,19 @@
   <main role="main">
       <Header />
 
-      <MoviesList />
+      <MovieList />
   </main>
 </template>
 
 <script>
 // @ is an alias to /src
 import Header from './components/Header.vue'
-import MoviesList from './components/MoviesList'
+import MovieList from './components/MovieList'
 
 export default {
   name: 'App',
   components: {
-    MoviesList,
+    MovieList,
     Header
   }
 }
